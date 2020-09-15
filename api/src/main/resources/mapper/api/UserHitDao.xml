@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bainianzhi.api.dao.UserHitDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.bainianzhi.common.entity.UserHitEntity" id="userHitMap">
+        <result property="id" column="id"/>
+        <result property="activityid" column="activityid"/>
+        <result property="userid" column="userid"/>
+        <result property="prizesid" column="prizesid"/>
+        <result property="hittime" column="hittime"/>
+    </resultMap>
+    <select id="getMyPrizes" resultType="com.bainianzhi.common.entity.dto.UserHitDto">
+        SELECT a.`title` AS title,p.`name` AS NAME,uh.`hittime` AS hittime
+        FROM `rain_user_hit` uh
+        LEFT JOIN `rain_activity` a ON uh.`activityid`=a.`id`
+        LEFT JOIN `rain_prizes` p ON uh.`prizesid`=p.`id`
+        WHERE uh.`userid`=#{userId}
+    </select>
+    <select id="hit" resultType="com.bainianzhi.common.entity.dto.HitDto">
+        SELECT p.`name`,u.`uname`
+        FROM `rain_user_hit` uh
+        LEFT JOIN `rain_user` u ON uh.`userid`=u.`id`
+        LEFT JOIN `rain_prizes` p ON uh.`prizesid`=p.`id`
+        WHERE uh.`activityid`=#{activityid}
+    </select>
+    <select id="getHit" resultType="java.lang.Long">
+        SELECT
+          h.`num` AS hit
+        FROM `rain_activity` a
+        LEFT JOIN `view_activity_hitnum` h ON h.`activityid` = a.`id`
+        WHERE a.`id`=#{activityId}
+    </select>
+
+</mapper>

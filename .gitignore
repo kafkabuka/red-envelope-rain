@@ -1,0 +1,6 @@
+# Project exclude paths
+/api/target/
+/common/target/
+/gateway/target/
+/job/target/
+/msg/target/

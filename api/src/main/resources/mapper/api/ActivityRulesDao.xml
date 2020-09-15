@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bainianzhi.api.dao.ActivityRulesDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.bainianzhi.common.entity.ActivityRulesEntity" id="activityRulesMap">
+        <result property="id" column="id"/>
+        <result property="activityid" column="activityid"/>
+        <result property="userlevel" column="userlevel"/>
+        <result property="enterTimes" column="enter_times"/>
+        <result property="goalTimes" column="goal_times"/>
+    </resultMap>
+
+
+    <resultMap type="com.bainianzhi.common.entity.vo.ActivityRulesVo" id="activityRulesMapVo">
+        <result property="id" column="id"/>
+        <result property="activityid" column="activityid"/>
+        <result property="userlevel" column="userlevel"/>
+        <result property="enterTimes" column="enter_times"/>
+        <result property="goalTimes" column="goal_times"/>
+        <result property="goalTimes" column="goal_times"/>
+        <result property="userLevelName" column="level"/>
+        <result property="title" column="title"/>
+    </resultMap>
+
+    <!--活动规则信息-->
+    <select id="queryActivityRulesByActivityId" parameterType="integer" resultMap="activityRulesMapVo">
+        select
+            rar.id,
+            rar.activityid,
+            rar.userlevel,
+            rar.enter_times,
+            rar.goal_times,
+            ra.title,
+            sd.dict_value AS level
+        from
+            rain_activity_rules rar
+            left join rain_activity ra on ra.id = rar.activityid
+            left join sys_dict sd on sd.dict_key =  rar.userlevel
+        where
+            sd.dict_type = 'rain_user_level' and
+            ra.id = #{id}
+    </select>
+
+</mapper>

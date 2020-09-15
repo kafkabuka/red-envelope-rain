@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bainianzhi.api.dao.ActivityPrizesDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.bainianzhi.common.entity.ActivityPrizesEntity" id="activityPrizesMap">
+        <result property="id" column="id"/>
+        <result property="activityid" column="activityid"/>
+        <result property="prizesid" column="prizesid"/>
+        <result property="amount" column="amount"/>
+    </resultMap>
+    <select id="getTotal" resultType="java.math.BigDecimal">
+        SELECT
+          p.`num` AS total
+        FROM `rain_activity` a
+        LEFT JOIN `view_activity_prizesnum` p ON p.`activityid` = a.`id`
+        WHERE a.`id`=#{activityId}
+    </select>
+
+    <resultMap type="com.bainianzhi.common.entity.vo.ActivityPrizesVo" id="activityPrizesMapVo">
+        <result property="id" column="id"/>
+        <result property="activityid" column="activityid"/>
+        <result property="prizesid" column="prizesid"/>
+        <result property="title" column="title"/>
+        <result property="name" column="name"/>
+        <result property="amount" column="amount"/>
+    </resultMap>
+
+    <!--活动奖品信息-->
+    <select id="queryActivityPrizesByActivityId" parameterType="integer" resultMap="activityPrizesMapVo">
+        select
+            rap.id,
+            rap.activityid,
+            rap.prizesid,
+            rap.amount,
+            ra.title,
+            rp.name
+        from
+            rain_activity_prizes rap
+            left join rain_activity ra on ra.id = rap.activityid
+            left join rain_prizes rp on rp.id =  rap.prizesid
+        where
+            ra.id = #{id}
+    </select>
+</mapper>
